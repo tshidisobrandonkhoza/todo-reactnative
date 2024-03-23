@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native'
 const Header = () => {
     return (
         <View style={styles.header}>
-            <Text style={styles.title}> My ToDos</Text>
+            <Text style={styles.title}> KHOZA TO-DO </Text>
         </View>
     )
 }

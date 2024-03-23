@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 //
 import Header from './components/header';
@@ -10,6 +10,7 @@ import AddTodo from './components/addTodo';
 export default function App() {
 
 
+  //const 
   const [todos, setTodos] = useState([
     { text: 'Buy milk', key: '1' },
     { text: 'Buy coffe', key: '2' },
@@ -24,39 +25,45 @@ export default function App() {
   }
 
   const submitHandler = (text) => {
+    if (text.length > 3) {
+      setTodos([...todos, { text: text, key: todos.length + 1 }])
 
-    // console.log({...todos})
-
-    // console.log('************')
-
-    // console.log(todos.length + 1)
-
-    // console.log('************') 
-    setTodos([...todos, { text: text, key: todos.length + 1 }])
-    console.log(todos)
+      Keyboard.dismiss();
+    } else {
+      Alert.alert('Opps!', 'A To Do must be atleast 3 characters long',
+        [{ text: 'Understood', onPress: () => console.log('alert closed') },
+        { text: 'Cancel', onPress: () => console.log('alert cancel') }
+        ]
+      )
+    }
   }
 
   return (
-    <View style={styles.container}>
-      <Header></Header>
-      <View style={styles.content}>
-        {/* form */}
-        <AddTodo submitHandler={submitHandler}></AddTodo>
+    <TouchableWithoutFeedback onPress={() => {
 
-        <View style={styles.list}>
-          <FlatList
-            data={todos}
-            renderItem={({ item }) => (
-              <Todoitem item={item} pressHandler={pressHandler} ></Todoitem>
-            )}
-          >
+      Keyboard.dismiss();
+    }}>
+      <View style={styles.container}>
+        <Header></Header>
+        <View style={styles.content}>
+          {/* form */}
+          <AddTodo submitHandler={submitHandler}></AddTodo>
 
-          </FlatList>
+          <View style={styles.list}>
+            <FlatList
+              data={todos}
+              renderItem={({ item }) => (
+                <Todoitem item={item} pressHandler={pressHandler} ></Todoitem>
+              )}
+            >
+
+            </FlatList>
+          </View>
         </View>
+
+
       </View>
-
-
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -66,7 +73,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   content: {
-    padding: 40
+    padding: 40, 
+    flex: 1
+  },
+  list: {
+    flex: 1,
+    marginTop: 20
   }
 
 });
